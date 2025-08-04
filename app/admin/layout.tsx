@@ -19,7 +19,8 @@ import {
   Clock,
   AlertCircle,
   Info,
-  Trash2
+  Trash2,
+  LogOut
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -114,6 +115,18 @@ export default function AdminLayout({
     toast.success('Notification deleted')
   }
 
+  const handleLogout = () => {
+    // Clear any stored authentication data
+    localStorage.removeItem('authToken')
+    sessionStorage.removeItem('authToken')
+    
+    // Show success message
+    toast.success('Logged out successfully')
+    
+    // Redirect to login page
+    window.location.href = '/login'
+  }
+
   const getNotificationIcon = (type: string) => {
     switch (type) {
       case 'order':
@@ -179,6 +192,18 @@ export default function AdminLayout({
                 </Link>
               )
             })}
+            <div className="mt-auto">
+              <button
+                onClick={() => {
+                  setSidebarOpen(false)
+                  handleLogout()
+                }}
+                className="group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors text-red-600 hover:bg-red-50 hover:text-red-900 w-full text-left"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                <span className="truncate">Logout</span>
+              </button>
+            </div>
           </nav>
         </div>
       </div>
@@ -213,6 +238,15 @@ export default function AdminLayout({
                 </Link>
               )
             })}
+            <div className="mt-auto">
+              <button
+                onClick={handleLogout}
+                className="group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors text-red-600 hover:bg-red-50 hover:text-red-900 w-full text-left"
+              >
+                <LogOut className="mr-3 h-5 w-5" />
+                <span className="truncate">Logout</span>
+              </button>
+            </div>
           </nav>
         </div>
       </div>

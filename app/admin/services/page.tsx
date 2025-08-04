@@ -105,7 +105,8 @@ export default function ServicesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Services Management</h1>
           <p className="text-gray-600">Manage catering and party order services</p>
@@ -116,10 +117,13 @@ export default function ServicesPage() {
             resetForm()
             setShowModal(true)
           }}
-          className="btn btn-primary"
+          className="group inline-flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 border-0 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 w-full sm:w-auto"
+          aria-label="Add new service"
+          title="Add new service to the catalog"
+          disabled={loading}
         >
-          <Plus className="h-4 w-4 mr-2" />
-          Add Service
+          <Plus className="h-5 w-5 mr-2 group-hover:rotate-90 transition-transform duration-200" />
+          {loading ? 'Adding...' : 'Add Service'}
         </button>
       </div>
 
