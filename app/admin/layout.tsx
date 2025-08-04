@@ -220,7 +220,7 @@ export default function AdminLayout({
       {/* Main content */}
       <div className="md:pl-64 lg:pl-72">
         {/* Topbar */}
-        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-3 shadow-sm sm:gap-x-6 sm:px-4 lg:px-6">
+        <div className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-2 border-b border-gray-200 bg-white px-3 shadow-sm sm:gap-x-4 sm:px-4 lg:gap-x-6 lg:px-6">
           <button
             type="button"
             className="-m-2.5 p-2.5 text-gray-700 md:hidden"
@@ -228,17 +228,17 @@ export default function AdminLayout({
           >
             <Menu className="h-6 w-6" />
           </button>
-
-          <div className="flex flex-1 gap-x-2 self-stretch sm:gap-x-4 lg:gap-x-6">
+      
+          <div className="flex flex-1 items-center min-w-0 gap-x-2 sm:gap-x-4 lg:gap-x-6">
             {/* Search */}
             <div className="flex flex-1 items-center min-w-0">
               <div className="relative w-full max-w-sm sm:max-w-md lg:max-w-lg">
-                <div className="absolute inset-y-0 left-0 pl-8 sm:pl-10 flex items-center pointer-events-none">
-                  <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
                 </div>
                 <input
                   type="text"
-                  className="block w-full pl-8 sm:pl-10 pr-3 sm:pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm shadow-sm"
+                  className="block w-full pl-9 pr-3 py-2 border border-gray-300 rounded-lg leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm shadow-sm"
                   placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
@@ -246,12 +246,12 @@ export default function AdminLayout({
               </div>
             </div>
           </div>
-
+      
           <div className="flex items-center gap-x-2 sm:gap-x-4 lg:gap-x-6">
             {/* Notifications */}
             <div className="relative">
-              <button
-                className="relative p-1.5 sm:p-2 text-gray-400 hover:text-gray-500 transition-colors"
+              <button 
+                className="relative p-2 text-gray-400 hover:text-gray-500 transition-colors"
                 onClick={() => setNotificationsOpen(!notificationsOpen)}
               >
                 <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -284,7 +284,7 @@ export default function AdminLayout({
                       </div>
                     </div>
                   </div>
-
+                  
                   <div className="max-h-96 overflow-y-auto">
                     {notifications.length === 0 ? (
                       <div className="p-4 text-center text-gray-500">
@@ -341,7 +341,7 @@ export default function AdminLayout({
                       </div>
                     )}
                   </div>
-
+                  
                   {notifications.length > 0 && (
                     <div className="p-4 border-t border-gray-200 bg-gray-50">
                       <button
@@ -361,11 +361,11 @@ export default function AdminLayout({
             </div>
 
             {/* User menu */}
-            <div className="flex items-center gap-x-1 sm:gap-x-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
-                <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-white" />
+            <div className="flex items-center gap-x-2">
+              <div className="h-8 w-8 rounded-full bg-gradient-to-r from-orange-500 to-red-500 flex items-center justify-center">
+                <User className="h-4 w-4 text-white" />
               </div>
-              <span className="text-xs sm:text-sm font-medium text-gray-900 hidden sm:block">
+              <span className="text-sm font-medium text-gray-900 hidden sm:block">
                 Admin User
               </span>
             </div>
