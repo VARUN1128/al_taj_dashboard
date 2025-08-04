@@ -4,7 +4,8 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: ['localhost'],
+    domains: ['localhost', 'images.unsplash.com'],
+    unoptimized: true,
   },
   // For Cloudflare Pages deployment - static export
   output: 'export',
