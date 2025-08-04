@@ -110,9 +110,9 @@ export default function CategoriesPage() {
             resetForm()
             setShowModal(true)
           }}
-          className="btn btn-primary w-full sm:w-auto"
+          className="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border-0 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
           Add Category
         </button>
       </div>
