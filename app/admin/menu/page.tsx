@@ -121,11 +121,11 @@ export default function MenuPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-4 sm:space-y-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Menu Management</h1>
-          <p className="text-gray-600">Manage your restaurant menu items</p>
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Menu Management</h1>
+          <p className="text-sm sm:text-base text-gray-600">Manage your restaurant menu items</p>
         </div>
         <button
           onClick={() => {
@@ -133,21 +133,21 @@ export default function MenuPage() {
             resetForm()
             setShowModal(true)
           }}
-          className="btn btn-primary"
+          className="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border-0 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
           Add Menu Item
         </button>
       </div>
 
       {/* Search */}
-      <div className="bg-white shadow rounded-lg p-6">
+      <div className="bg-white shadow rounded-lg p-4 sm:p-6">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
           <input
             type="text"
             placeholder="Search menu items..."
-            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm sm:text-base"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
@@ -155,70 +155,70 @@ export default function MenuPage() {
       </div>
 
       {/* Menu Items Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {filteredItems.map((item) => (
-          <div key={item.id} className="bg-white shadow rounded-lg overflow-hidden">
+          <div key={item.id} className="bg-white shadow rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
             <div className="aspect-w-16 aspect-h-9 bg-gray-200">
               {item.image_url ? (
                 <img
                   src={item.image_url}
                   alt={item.name}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-32 sm:h-40 lg:h-48 object-cover"
                 />
               ) : (
-                <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-                  <ImageIcon className="h-12 w-12 text-gray-400" />
+                <div className="w-full h-32 sm:h-40 lg:h-48 bg-gray-200 flex items-center justify-center">
+                  <ImageIcon className="h-8 w-8 sm:h-10 sm:w-10 lg:h-12 lg:w-12 text-gray-400" />
                 </div>
               )}
             </div>
-            <div className="p-4">
+            <div className="p-3 sm:p-4">
               <div className="flex justify-between items-start mb-2">
-                <h3 className="text-lg font-medium text-gray-900">{item.name}</h3>
-                <div className="flex gap-1">
+                <h3 className="text-sm sm:text-base lg:text-lg font-medium text-gray-900 line-clamp-1">{item.name}</h3>
+                <div className="flex gap-1 flex-shrink-0">
                   {item.is_vegetarian && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
+                    <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
                       Veg
                     </span>
                   )}
                   {item.is_spicy && (
-                    <span className="inline-flex items-center px-2 py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
+                    <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 sm:py-1 text-xs font-medium bg-red-100 text-red-800 rounded-full">
                       Spicy
                     </span>
                   )}
                 </div>
               </div>
-              <p className="text-gray-600 text-sm mb-3">{item.description}</p>
-              <div className="flex justify-between items-center mb-3">
-                <span className="text-lg font-bold text-gray-900">
+              <p className="text-gray-600 text-xs sm:text-sm mb-2 sm:mb-3 line-clamp-2">{item.description}</p>
+              <div className="flex justify-between items-center mb-2 sm:mb-3">
+                <span className="text-sm sm:text-base lg:text-lg font-bold text-gray-900">
                   {formatCurrency(item.price)}
                 </span>
-                <span className="text-sm text-gray-500">
+                <span className="text-xs sm:text-sm text-gray-500">
                   {item.category?.name}
                 </span>
               </div>
               <div className="flex justify-between items-center">
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   {item.is_available ? (
-                    <Eye className="h-4 w-4 text-green-600" />
+                    <Eye className="h-3 w-3 sm:h-4 sm:w-4 text-green-600" />
                   ) : (
-                    <EyeOff className="h-4 w-4 text-gray-400" />
+                    <EyeOff className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400" />
                   )}
-                  <span className={`text-sm ${item.is_available ? 'text-green-600' : 'text-gray-500'}`}>
+                  <span className={`text-xs sm:text-sm ${item.is_available ? 'text-green-600' : 'text-gray-500'}`}>
                     {item.is_available ? 'Available' : 'Unavailable'}
                   </span>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                   <button
                     onClick={() => handleEdit(item)}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="text-blue-600 hover:text-blue-900 p-1"
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    className="text-red-600 hover:text-red-900"
+                    className="text-red-600 hover:text-red-900 p-1"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                   </button>
                 </div>
               </div>
@@ -230,42 +230,42 @@ export default function MenuPage() {
       {/* Add/Edit Modal */}
       {showModal && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900">
                 {editingItem ? 'Edit Menu Item' : 'Add Menu Item'}
               </h3>
               <button
                 onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 p-1"
               >
                 ×
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                     Name
                   </label>
                   <input
                     type="text"
                     required
-                    className="input"
+                    className="input text-sm sm:text-base"
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                     Price
                   </label>
                   <input
                     type="number"
                     step="0.01"
                     required
-                    className="input"
+                    className="input text-sm sm:text-base"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
                   />
@@ -273,25 +273,25 @@ export default function MenuPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Description
                 </label>
                 <textarea
                   required
                   rows={3}
-                  className="input"
+                  className="input text-sm sm:text-base"
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Category
                 </label>
                 <select
                   required
-                  className="input"
+                  className="input text-sm sm:text-base"
                   value={formData.category_id}
                   onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
                 >
@@ -305,18 +305,18 @@ export default function MenuPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
+                <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
                   Image URL
                 </label>
                 <input
                   type="url"
-                  className="input"
+                  className="input text-sm sm:text-base"
                   value={formData.image_url}
                   onChange={(e) => setFormData({ ...formData, image_url: e.target.value })}
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 <label className="flex items-center">
                   <input
                     type="checkbox"
@@ -324,7 +324,7 @@ export default function MenuPage() {
                     checked={formData.is_vegetarian}
                     onChange={(e) => setFormData({ ...formData, is_vegetarian: e.target.checked })}
                   />
-                  <span className="ml-2 text-sm text-gray-700">Vegetarian</span>
+                  <span className="ml-2 text-xs sm:text-sm text-gray-700">Vegetarian</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -333,7 +333,7 @@ export default function MenuPage() {
                     checked={formData.is_spicy}
                     onChange={(e) => setFormData({ ...formData, is_spicy: e.target.checked })}
                   />
-                  <span className="ml-2 text-sm text-gray-700">Spicy</span>
+                  <span className="ml-2 text-xs sm:text-sm text-gray-700">Spicy</span>
                 </label>
                 <label className="flex items-center">
                   <input
@@ -342,18 +342,18 @@ export default function MenuPage() {
                     checked={formData.is_available}
                     onChange={(e) => setFormData({ ...formData, is_available: e.target.checked })}
                   />
-                  <span className="ml-2 text-sm text-gray-700">Available</span>
+                  <span className="ml-2 text-xs sm:text-sm text-gray-700">Available</span>
                 </label>
               </div>
 
-              <div className="flex gap-2">
-                <button type="submit" className="btn btn-primary">
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button type="submit" className="btn btn-primary text-sm sm:text-base">
                   {editingItem ? 'Update' : 'Add'} Menu Item
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="btn btn-secondary"
+                  className="btn btn-secondary text-sm sm:text-base"
                 >
                   Cancel
                 </button>
