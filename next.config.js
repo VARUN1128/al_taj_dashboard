@@ -7,8 +7,7 @@ const nextConfig = {
     domains: ['localhost'],
   },
   // For Cloudflare Pages deployment
-  output: 'standalone',
-  // Ensure proper static generation
+  output: 'export',
   trailingSlash: true,
 }
 
