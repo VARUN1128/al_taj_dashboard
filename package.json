@@ -6,10 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "pages:build": "npx @cloudflare/next-on-pages@1",
-    "pages:deploy": "npx wrangler pages deploy .vercel/output/static",
-    "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01"
+    "lint": "next lint"
   },
   "dependencies": {
     "next": "14.0.0",
