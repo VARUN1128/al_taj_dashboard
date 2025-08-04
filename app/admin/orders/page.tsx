@@ -95,22 +95,22 @@ export default function OrdersPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Orders Management</h1>
-        <p className="text-gray-600">Manage and track all customer orders</p>
+        <p className="text-sm sm:text-base text-gray-600">Manage and track all customer orders</p>
       </div>
 
       {/* Filters */}
-      <div className="bg-white shadow rounded-lg p-6">
-        <div className="flex flex-col sm:flex-row gap-4">
+      <div className="bg-white shadow rounded-lg p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <input
                 type="text"
-                placeholder="Search orders by customer name, phone, or order ID..."
-                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                placeholder="Search orders..."
+                className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -120,7 +120,7 @@ export default function OrdersPage() {
             <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-              className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
             >
               <option value="all">All Status</option>
               <option value="pending">Pending</option>
@@ -134,8 +134,8 @@ export default function OrdersPage() {
 
       {/* Orders Table */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h3 className="text-lg font-medium text-gray-900">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
+          <h3 className="text-base sm:text-lg font-medium text-gray-900">
             Orders ({filteredOrders.length})
           </h3>
         </div>
@@ -143,25 +143,25 @@ export default function OrdersPage() {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Order ID
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                   Customer
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                   Items
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Amount
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                   Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -169,62 +169,62 @@ export default function OrdersPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredOrders.map((order) => (
                 <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                     #{order.id.slice(0, 8)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap hidden sm:table-cell">
                     <div>
-                      <div className="text-sm font-medium text-gray-900">
+                      <div className="text-xs sm:text-sm font-medium text-gray-900">
                         {order.customer_name}
                       </div>
-                      <div className="text-sm text-gray-500 flex items-center gap-1">
+                      <div className="text-xs sm:text-sm text-gray-500 flex items-center gap-1">
                         <Phone className="h-3 w-3" />
                         {order.customer_phone}
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900 hidden md:table-cell">
                     {order.order_items?.length || 0} items
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium text-gray-900">
                     {formatCurrency(order.total_amount)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center gap-2">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
+                    <div className="flex items-center gap-1 sm:gap-2">
                       {getStatusIcon(order.status)}
                       <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
                     </div>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
                     {formatDate(order.created_at)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                    <div className="flex gap-2">
+                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
+                    <div className="flex gap-1 sm:gap-2">
                       <button
                         onClick={() => {
                           setSelectedOrder(order)
                           setShowOrderModal(true)
                         }}
-                        className="text-primary-600 hover:text-primary-900"
+                        className="text-primary-600 hover:text-primary-900 p-1"
                       >
                         <Eye className="h-4 w-4" />
                       </button>
                       {order.status === 'pending' && (
                         <button
                           onClick={() => updateOrderStatus(order.id, 'preparing')}
-                          className="text-blue-600 hover:text-blue-900"
+                          className="text-blue-600 hover:text-blue-900 text-xs sm:text-sm px-2 py-1 rounded"
                         >
-                          Start Preparing
+                          Start
                         </button>
                       )}
                       {order.status === 'preparing' && (
                         <button
                           onClick={() => updateOrderStatus(order.id, 'completed')}
-                          className="text-green-600 hover:text-green-900"
+                          className="text-green-600 hover:text-green-900 text-xs sm:text-sm px-2 py-1 rounded"
                         >
-                          Mark Complete
+                          Complete
                         </button>
                       )}
                     </div>
@@ -239,85 +239,85 @@ export default function OrdersPage() {
       {/* Order Details Modal */}
       {showOrderModal && selectedOrder && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
+          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-medium text-gray-900">
+              <h3 className="text-base sm:text-lg font-medium text-gray-900">
                 Order Details #{selectedOrder.id.slice(0, 8)}
               </h3>
               <button
                 onClick={() => setShowOrderModal(false)}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-gray-400 hover:text-gray-600 p-1"
               >
-                <XCircle className="h-6 w-6" />
+                <XCircle className="h-5 w-5 sm:h-6 sm:w-6" />
               </button>
             </div>
 
             <div className="space-y-4">
               {/* Customer Info */}
-              <div className="bg-gray-50 p-4 rounded-lg">
-                <h4 className="font-medium text-gray-900 mb-2">Customer Information</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
+                <h4 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Customer Information</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                   <div>
-                    <p className="text-sm text-gray-600">Name</p>
-                    <p className="font-medium">{selectedOrder.customer_name}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Name</p>
+                    <p className="font-medium text-sm sm:text-base">{selectedOrder.customer_name}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-600">Phone</p>
-                    <p className="font-medium">{selectedOrder.customer_phone}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Phone</p>
+                    <p className="font-medium text-sm sm:text-base">{selectedOrder.customer_phone}</p>
                   </div>
                   <div className="md:col-span-2">
-                    <p className="text-sm text-gray-600">Delivery Address</p>
-                    <p className="font-medium">{selectedOrder.delivery_address}</p>
+                    <p className="text-xs sm:text-sm text-gray-600">Delivery Address</p>
+                    <p className="font-medium text-sm sm:text-base">{selectedOrder.delivery_address}</p>
                   </div>
                 </div>
               </div>
 
               {/* Order Items */}
               <div>
-                <h4 className="font-medium text-gray-900 mb-2">Order Items</h4>
+                <h4 className="font-medium text-gray-900 mb-2 text-sm sm:text-base">Order Items</h4>
                 <div className="space-y-2">
                   {selectedOrder.order_items?.map((item) => (
                     <div key={item.id} className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
                       <div>
-                        <p className="font-medium">{item.menu_item?.name}</p>
-                        <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                        <p className="font-medium text-sm sm:text-base">{item.menu_item?.name}</p>
+                        <p className="text-xs sm:text-sm text-gray-600">Qty: {item.quantity}</p>
                       </div>
-                      <p className="font-medium">{formatCurrency(item.price)}</p>
+                      <p className="font-medium text-sm sm:text-base">{formatCurrency(item.price)}</p>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Order Summary */}
-              <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-600">Payment Mode</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Payment Mode</span>
                   <div className="flex items-center gap-1">
                     {getPaymentIcon(selectedOrder.payment_mode)}
-                    <span className="font-medium capitalize">{selectedOrder.payment_mode}</span>
+                    <span className="font-medium capitalize text-xs sm:text-sm">{selectedOrder.payment_mode}</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm text-gray-600">Status</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Status</span>
                   <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(selectedOrder.status)}`}>
                     {selectedOrder.status}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Total Amount</span>
-                  <span className="font-bold text-lg">{formatCurrency(selectedOrder.total_amount)}</span>
+                  <span className="text-xs sm:text-sm text-gray-600">Total Amount</span>
+                  <span className="font-bold text-base sm:text-lg">{formatCurrency(selectedOrder.total_amount)}</span>
                 </div>
               </div>
 
               {/* Status Update */}
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 {selectedOrder.status === 'pending' && (
                   <button
                     onClick={() => {
                       updateOrderStatus(selectedOrder.id, 'preparing')
                       setShowOrderModal(false)
                     }}
-                    className="btn btn-primary"
+                    className="btn btn-primary text-sm"
                   >
                     Start Preparing
                   </button>
@@ -328,7 +328,7 @@ export default function OrdersPage() {
                       updateOrderStatus(selectedOrder.id, 'completed')
                       setShowOrderModal(false)
                     }}
-                    className="btn btn-primary"
+                    className="btn btn-primary text-sm"
                   >
                     Mark Complete
                   </button>
@@ -339,7 +339,7 @@ export default function OrdersPage() {
                       updateOrderStatus(selectedOrder.id, 'cancelled')
                       setShowOrderModal(false)
                     }}
-                    className="btn btn-danger"
+                    className="btn btn-danger text-sm"
                   >
                     Cancel Order
                   </button>
