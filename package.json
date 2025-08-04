@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "npx @cloudflare/next-on-pages@1",
+    "pages:deploy": "npx wrangler pages deploy .vercel/output/static",
+    "pages:dev": "npx wrangler pages dev .vercel/output/static --compatibility-date=2024-01-01"
   },
   "dependencies": {
     "next": "14.0.0",
@@ -15,7 +18,7 @@
     "@supabase/supabase-js": "^2.38.0",
     "@supabase/auth-helpers-nextjs": "^0.8.7",
     "recharts": "^2.8.0",
-    "lucide-react": "^0.292.0",
+    "lucide-react": "^0.294.0",
     "react-hot-toast": "^2.4.1",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0"
