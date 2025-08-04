@@ -390,7 +390,11 @@ export default function Dashboard() {
                       </span>
                     </td>
                     <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
-                      {new Date(order.created_at).toLocaleDateString()}
+                      {new Date(order.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
                     </td>
                   </tr>
                 ))}
