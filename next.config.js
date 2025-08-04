@@ -8,9 +8,8 @@ const nextConfig = {
   },
   // For Cloudflare Pages deployment
   output: 'standalone',
-  // Alternative: use 'export' for static deployment
-  // output: 'export',
-  // trailingSlash: true,
+  // Ensure proper static generation
+  trailingSlash: true,
 }
 
 module.exports = nextConfig 

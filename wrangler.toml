@@ -1,15 +1,8 @@
 name = "taj-dashboard"
 compatibility_date = "2024-01-01"
 
+# Cloudflare Pages specific configuration
+pages_build_output_dir = ".next"
+
 [build]
-command = "npm run pages:build"
-
-[build.upload]
-format = "service-worker"
-
-[env.production]
-name = "taj-dashboard"
-route = "taj-dashboard.pages.dev/*"
-
-[env.production.build]
-command = "npm run pages:build" 
+command = "npm run build" 
