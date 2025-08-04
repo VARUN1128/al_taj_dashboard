@@ -6,9 +6,8 @@ const nextConfig = {
   images: {
     domains: ['localhost'],
   },
-  // For Cloudflare Pages deployment
-  output: 'export',
-  trailingSlash: true,
+  // For Cloudflare Pages deployment with @cloudflare/next-on-pages
+  output: 'standalone',
 }
 
 module.exports = nextConfig 
