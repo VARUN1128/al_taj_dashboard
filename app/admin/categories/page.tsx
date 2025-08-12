@@ -1,58 +1,63 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  Search,
-  GripVertical
-} from 'lucide-react'
-import { mockCategories, Category } from '@/lib/supabase'
+import { Plus, Edit, Trash2, Search } from 'lucide-react'
+import { categoriesService } from '@/lib/dataService'
+import { Category, CategoryFormData } from '@/lib/types'
+import Modal from '@/components/Modal'
+import { TableSkeleton } from '@/components/LoadingSkeleton'
 import toast from 'react-hot-toast'
 
-export default function CategoriesPage() {
-  const [categories, setCategories] = useState<Category[]>(mockCategories)
-  const [loading, setLoading] = useState(false)
+export default function CategoriesManagement() {
+  const [categories, setCategories] = useState<Category[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
-  const [showModal, setShowModal] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<CategoryFormData>({
     name: '',
-    display_order: ''
+    icon: '',
+    display_order: 1
   })
+
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+
+  const fetchCategories = async () => {
+    try {
+      setLoading(true)
+      setError(null)
+      
+      const data = await categoriesService.getAll()
+      setCategories(data)
+    } catch (err) {
+      console.error('Error fetching categories:', err)
+      setError('Failed to load categories')
+      toast.error('Failed to load categories')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     try {
-      const categoryData = {
-        ...formData,
-        display_order: parseInt(formData.display_order),
-        icon: '📁' // Default icon
-      }
-
       if (editingCategory) {
-        setCategories(categories.map(cat =>
-          cat.id === editingCategory.id ? { ...cat, ...categoryData } : cat
-        ))
+        await categoriesService.update(editingCategory.id, formData)
         toast.success('Category updated successfully')
       } else {
-        const newCategory: Category = {
-          id: Date.now().toString(),
-          ...categoryData,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-        setCategories([...categories, newCategory])
-        toast.success('Category added successfully')
+        await categoriesService.create(formData)
+        toast.success('Category created successfully')
       }
-
-      setShowModal(false)
-      setEditingCategory(null)
+      
+      setIsModalOpen(false)
       resetForm()
-    } catch (error) {
-      console.error('Error saving category:', error)
+      fetchCategories()
+    } catch (err) {
+      console.error('Error saving category:', err)
       toast.error('Failed to save category')
     }
   }
@@ -61,97 +66,123 @@ export default function CategoriesPage() {
     setEditingCategory(category)
     setFormData({
       name: category.name,
-      display_order: category.display_order.toString()
+      icon: category.icon,
+      display_order: category.display_order
     })
-    setShowModal(true)
+    setIsModalOpen(true)
   }
 
   const handleDelete = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this category?')) return
-
+    if (!confirm('Are you sure you want to delete this category? This will also affect all menu items in this category.')) return
+    
     try {
-      setCategories(categories.filter(cat => cat.id !== id))
+      await categoriesService.delete(id)
       toast.success('Category deleted successfully')
-    } catch (error) {
-      console.error('Error deleting category:', error)
+      fetchCategories()
+    } catch (err) {
+      console.error('Error deleting category:', err)
       toast.error('Failed to delete category')
     }
   }
 
   const resetForm = () => {
+    setEditingCategory(null)
     setFormData({
       name: '',
-      display_order: ''
+      icon: '',
+      display_order: 1
     })
   }
 
+  const openCreateModal = () => {
+    resetForm()
+    setIsModalOpen(true)
+  }
+
   const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    category.icon.includes(searchTerm)
   )
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-96">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">Categories Management</h1>
+        </div>
+        <TableSkeleton rows={10} />
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="flex justify-between items-center">
+          <h1 className="text-2xl font-bold text-gray-900">Categories Management</h1>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="text-center text-red-600">
+            <p className="text-lg font-medium">{error}</p>
+            <button 
+              onClick={() => fetchCategories()} 
+              className="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-2xl font-bold text-gray-900">Categories Management</h1>
-          <p className="text-sm sm:text-base text-gray-600">Manage menu categories and their display order</p>
-        </div>
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Categories Management</h1>
         <button
-          onClick={() => {
-            setEditingCategory(null)
-            resetForm()
-            setShowModal(true)
-          }}
-          className="w-full sm:w-auto inline-flex items-center justify-center px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 border-0 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 text-sm sm:text-base"
+          onClick={openCreateModal}
+          className="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors flex items-center space-x-2"
         >
-          <Plus className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
-          Add Category
+          <Plus size={20} />
+          <span>Add Category</span>
         </button>
       </div>
 
       {/* Search */}
-      <div className="bg-white shadow rounded-lg p-4 sm:p-6">
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-          <input
-            type="text"
-            placeholder="Search categories..."
-            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-primary-500 focus:border-primary-500 text-sm"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      <div className="bg-white rounded-lg shadow p-6">
+        <div className="max-w-md">
+          <label className="block text-sm font-medium text-gray-700 mb-2">Search Categories</label>
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search by name or icon..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            />
+          </div>
         </div>
       </div>
 
-      {/* Categories List */}
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200">
-          <h3 className="text-base sm:text-lg font-medium text-gray-900">
-            Categories ({filteredCategories.length})
-          </h3>
-        </div>
+      {/* Categories Table */}
+      <div className="bg-white rounded-lg shadow overflow-hidden">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Order
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
                 </th>
-                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Name
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Display Order
                 </th>
-                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Created
                 </th>
-                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -159,37 +190,42 @@ export default function CategoriesPage() {
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredCategories.map((category) => (
                 <tr key={category.id} className="hover:bg-gray-50">
-                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <GripVertical className="h-3 w-3 sm:h-4 sm:w-4 text-gray-400 mr-1 sm:mr-2" />
-                      {category.display_order}
+                      <div className="text-2xl mr-3">{category.icon}</div>
+                      <div>
+                        <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                        <div className="text-sm text-gray-500">ID: {category.id}</div>
+                      </div>
                     </div>
                   </td>
-                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap">
-                    <div className="text-xs sm:text-sm font-medium text-gray-900">
-                      {category.name}
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-900">{category.display_order}</div>
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <div className="text-sm text-gray-500">
+                      {new Date(category.created_at).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}
                     </div>
                   </td>
-                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm text-gray-500 hidden sm:table-cell">
-                    {new Date(category.created_at).toLocaleDateString('en-US', {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric'
-                    })}
-                  </td>
-                  <td className="px-3 sm:px-6 py-2 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
-                    <div className="flex gap-1 sm:gap-2">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    <div className="flex items-center space-x-2">
                       <button
                         onClick={() => handleEdit(category)}
-                        className="text-blue-600 hover:text-blue-900 p-1"
+                        className="text-indigo-600 hover:text-indigo-900 p-1 rounded hover:bg-indigo-50"
+                        title="Edit Category"
                       >
-                        <Edit className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <Edit size={16} />
                       </button>
                       <button
                         onClick={() => handleDelete(category.id)}
-                        className="text-red-600 hover:text-red-900 p-1"
+                        className="text-red-600 hover:text-red-900 p-1 rounded hover:bg-red-50"
+                        title="Delete Category"
                       >
-                        <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <Trash2 size={16} />
                       </button>
                     </div>
                   </td>
@@ -198,68 +234,96 @@ export default function CategoriesPage() {
             </tbody>
           </table>
         </div>
+        
+        {filteredCategories.length === 0 && (
+          <div className="text-center py-12">
+            <div className="text-gray-500">
+              {searchTerm ? 'No categories found matching your search.' : 'No categories found.'}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Add/Edit Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
-          <div className="relative top-4 sm:top-20 mx-auto p-4 sm:p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-base sm:text-lg font-medium text-gray-900">
-                {editingCategory ? 'Edit Category' : 'Add Category'}
-              </h3>
-              <button
-                onClick={() => setShowModal(false)}
-                className="text-gray-400 hover:text-gray-600 p-1"
-              >
-                ×
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    className="input text-sm"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1">
-                    Display Order
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    className="input text-sm"
-                    value={formData.display_order}
-                    onChange={(e) => setFormData({ ...formData, display_order: e.target.value })}
-                  />
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-2">
-                <button type="submit" className="btn btn-primary text-sm">
-                  {editingCategory ? 'Update' : 'Add'} Category
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setShowModal(false)}
-                  className="btn btn-secondary text-sm"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+      {/* Create/Edit Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false)
+          resetForm()
+        }}
+        title={editingCategory ? 'Edit Category' : 'Add Category'}
+        size="md"
+      >
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Name *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="Enter category name"
+            />
           </div>
-        </div>
-      )}
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Icon (Emoji) *
+            </label>
+            <input
+              type="text"
+              required
+              value={formData.icon}
+              onChange={(e) => setFormData({ ...formData, icon: e.target.value })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="🍕 (Enter an emoji)"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Use emojis or unicode characters as icons
+            </p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Display Order *
+            </label>
+            <input
+              type="number"
+              required
+              min="1"
+              value={formData.display_order}
+              onChange={(e) => setFormData({ ...formData, display_order: parseInt(e.target.value) || 1 })}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              placeholder="1"
+            />
+            <p className="mt-1 text-sm text-gray-500">
+              Lower numbers appear first in the menu
+            </p>
+          </div>
+          
+          <div className="flex justify-end space-x-3 pt-4">
+            <button
+              type="button"
+              onClick={() => {
+                setIsModalOpen(false)
+                resetForm()
+              }}
+              className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
+            >
+              {editingCategory ? 'Update' : 'Create'}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 } 

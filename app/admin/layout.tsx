@@ -20,7 +20,8 @@ import {
   AlertCircle,
   Info,
   Trash2,
-  LogOut
+  LogOut,
+  Package
 } from 'lucide-react'
 import toast from 'react-hot-toast'
 
@@ -29,7 +30,8 @@ const navigation = [
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Menu', href: '/admin/menu', icon: Utensils },
   { name: 'Categories', href: '/admin/categories', icon: FolderOpen },
-  { name: 'Services', href: '/admin/services', icon: Gift },
+  { name: 'Rewards', href: '/admin/rewards', icon: Gift },
+  { name: 'Services', href: '/admin/services', icon: Package },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
 ]
 
